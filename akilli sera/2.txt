@@ -1,0 +1,12 @@
+int RGB=5;
+ 
+void setup() {
+pinMode(RGB, OUTPUT);
+}
+ 
+void loop() {
+digitalWrite(RGB, HIGH);//normalde 28800000ms 8 saate denk gelir ve bu değerler kullınılır.
+delay(3000);
+digitalWrite(RGB, LOW);//normalde 7200000ms 2 saate denk gelir ve bu değerler kullanılır.
+delay(3000);
+}

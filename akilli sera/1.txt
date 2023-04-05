@@ -1,0 +1,92 @@
+#include <SimpleDHT.h>
+
+
+int pintopraksensor = A0;
+int pinpompa = 13;
+int pinfan = 38;
+int pinrez = 47;
+int pinbuzzer = 31;
+int pinDHT11 = 2;
+int toprakveri;
+SimpleDHT11 dht11(pinDHT11);
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(pinrez, OUTPUT);
+  pinMode(pinfan, OUTPUT);
+  pinMode(pinpompa, OUTPUT);
+  pinMode(pinbuzzer, OUTPUT);
+}
+
+void loop() {
+
+  Serial.println("=================================");
+  Serial.println("Sample DHT11...");
+  
+
+  byte temperature = 0; //                    dhtdhtdht
+  byte humidity = 0;
+  int err = SimpleDHTErrSuccess;
+  if ((err = dht11.read(&temperature, &humidity, NULL)) != SimpleDHTErrSuccess) {
+    Serial.print("Read DHT11 failed, err="); Serial.println(err);delay(1000);
+    return;
+  }
+  
+  Serial.print("Sıcaklık");
+  Serial.print((int)temperature); Serial.print(" *C, "); 
+  Serial.print((int)humidity); Serial.println(" H");
+  delay(200);
+  if(temperature<30){
+    Serial.print("Hava Soguk");
+  Serial.print((int)temperature); Serial.print(" *C, "); 
+  Serial.print((int)humidity); Serial.println(" H");
+  Serial.println("rezistans calisiyor");
+  digitalWrite(pinrez, LOW);
+  digitalWrite(pinfan, LOW);
+  digitalWrite(pinbuzzer, LOW);
+  delay(200);
+    }
+     if(temperature>=30){
+    Serial.print("Normal Hava Sicakligi");
+  Serial.print((int)temperature); Serial.print(" *C, "); 
+  Serial.print((int)humidity); Serial.println(" H");
+  digitalWrite(pinrez, LOW);
+  digitalWrite(pinfan, LOW);
+  digitalWrite(pinbuzzer, LOW);
+  delay(200);
+    }
+    if(temperature>40){
+      Serial.print("Hava Sicak");
+  Serial.print((int)temperature); Serial.print(" *C, "); 
+  Serial.print((int)humidity); Serial.println(" H");
+  Serial.println("Fan Calisiyor");
+  Serial.println("Buzzer calisiyor");
+  digitalWrite(pinrez, LOW);
+  digitalWrite(pinfan, HIGH);
+  digitalWrite(pinbuzzer, HIGH);
+  delay(200);
+    }
+    toprakveri = analogRead(pintopraksensor);          //topraktopraktoprak
+     toprakveri = map(toprakveri, 0, 1023, 0, 100);
+     Serial.print("toprak nem durumu: ");
+  Serial.println(toprakveri);
+  delay(200);
+
+  if(toprakveri<20){
+    digitalWrite(pinpompa, LOW);
+     Serial.print("toprak nem durumu: ");
+  Serial.println(toprakveri);
+  delay(200);
+    }
+  if(toprakveri>=20){
+    digitalWrite(pinpompa, HIGH);
+     Serial.print("toprak nem durumu: ");
+  Serial.println(toprakveri);
+    Serial.println("Pompa Calisiyor");
+    delay(20000);
+  }
+    
+  
+  
+  delay(1500);
+}
